@@ -32,11 +32,11 @@
   <!-- Vypisuji obsah, co obsahuje proměnná data -->
   <!-- Před zmářknutím tlačítka obsahuje pouze {} - prízdný objekt, proto se níže nacházejí podmínky -->
 
-  <div *ngIf="fotbal$ | async; let fotbal">
-    <h1>{{fotbal.response[0].league.name}}</h1>
-    <p>{{fotbal.response[0].country.name}}</p>
-    <img src="{{fotbal.response[0].league.logo}}" alt="Logo ligy">
-  </div>
+<!--  <div *ngIf="fotbal$ | async; let fotbal">-->
+<!--    <h1>{{fotbal.response[0].league.name}}</h1>-->
+<!--    <p>{{fotbal.response[0].country.name}}</p>-->
+<!--    <img src="{{fotbal.response[0].league.logo}}" alt="Logo ligy">-->
+<!--  </div>-->
 
 
   <!-- Proměnná weather$ obsahuje Observable - což lze získav skrze .subscribe -->
@@ -63,7 +63,9 @@
       <!-- Souštění .subscribe a získání dat stejně jako v případě výše -->
       <ng-container *ngIf="item$ | async; let fotbal">
         <!-- Použití Ionic designu - ion-card dle oficiální dokumentace-->
-        <ion-card style="width: fit-content">
+        <!-- Angular routerLink otevře stránku detailu > /details - endpoint je zapsaný v app.router-module.ts -->
+        <!-- Pomocí metody click (reaguje dříve jak routerLink) předám data do pomocné servisky -->
+        <ion-card  style="width:250px " routerLink="/detail" (click)="setDetailData(fotbal)">
           <ion-img src="{{fotbal.response[0].league.logo}}" alt="{{fotbal.response[0].league.name}}"></ion-img>
           <ion-card-header>
             <ion-card-title>{{fotbal.response[0].league.name}}</ion-card-title>

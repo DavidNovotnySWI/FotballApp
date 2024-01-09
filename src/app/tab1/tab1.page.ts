@@ -1,11 +1,12 @@
 import {Component} from '@angular/core';
 import {FotballApiService} from "../services/fotbal-api/fotbal-api.service";
-import {Observable} from "rxjs";
+import {firstValueFrom, Observable} from "rxjs";
 import {Leagues} from "../models/fotbal.model";
 import {ModalController} from "@ionic/angular";
 import {SettingsPage} from "../pages/settings/settings.page";
 import {LeaguesService} from "../services/leagues/leagues.service";
 import {image} from "ionicons/icons";
+import { NavController } from '@ionic/angular';     // pro predani id do detailu
 
 @Component({
   selector: 'app-tab1',
@@ -33,7 +34,8 @@ export class Tab1Page {
     //  pokud by se jednalo o abstraktní třídu, nebo třídu určenou k dědění použil bych public nebo protected
     private fotbalApiService: FotballApiService,
     private  modalCtrl: ModalController,
-    private leaguesService: LeaguesService // přidání servisky pro získání nastavení league
+    private leaguesService: LeaguesService, // přidání servisky pro získání nastavení league
+    private navCtrl: NavController  // nav controller pro predani info na dalsi page
   ) {
 
     this.initLeagues();
@@ -50,11 +52,17 @@ export class Tab1Page {
    *
    * @private
    */
-  private initLeagues() {
+  private async initLeagues() {
     // reset pole na prázdné
     this.fotbals$ = [];
     // získání všech places ze servisky (jsou vždy aktuální)
-    this.leaguesService.leaguesSample.forEach(league => {
+    // firstValueFrom = získá první (poslední přidaná) data do observable patternu tedy proměnné places$
+    const leagues = await firstValueFrom(this.leaguesService.leaguesSample$)
+    // firstValueFrom je použití místo .subscribe, data chci totiž jen jedenkrát
+    // Pokud bych použil .subscribe došlo by v každém volání funkce initWeather (tedy po zavření modalu)
+    // k vytvoření nového odběratele až do n odběratelů. Následkem čeho by se přehltila pamět a aplikace by spadla.
+    // this.placesService.places$.subscribe(places => {
+    leagues.forEach(league => {
       // kontrola jestli se má zobrazovat na domovské obrazovce nebo ne
       if (league.homepage) {
         // push do resetovaného pole
@@ -62,12 +70,13 @@ export class Tab1Page {
         // na view pak používám | async stejně jako v případě získání jedné polohy
         // rozdíl je že to celé běží v cyklu, který je dynamický a reaguje na změny pole
         this.fotbals$.push(
-          this.fotbalApiService.getLeague$(league.id,league.country,league.name)
+          this.fotbalApiService.getLeague$(league.id, league.country, league.name)
         )
         // Lepší jednorádkový zápis
         // this.weathers$.push(this.weatherApiService.getByGeo$(place.latitude, place.longitude))
       }
-    });
+      // }); //původní část z .subscribe (ukončovací)
+    })
   }
 
   /**
@@ -113,6 +122,15 @@ export class Tab1Page {
     // .then() je v tomto případě výhodnější
     // await modal.onWillDismiss();
     // this.initWeather();
+  }
+  /**
+   * Set detail weather data
+   *
+   * Nastaví detail data skrze servisku dříve, než se otevře routerLink na view
+   * @param league
+   */
+  setDetailData(league: Leagues) {
+    this.fotbalApiService.detail = league;
   }
 
   protected readonly innerHeight = innerHeight;

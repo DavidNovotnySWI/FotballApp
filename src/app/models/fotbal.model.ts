@@ -1,3 +1,5 @@
+//leagues
+
 export interface Leagues {
   get: string;
   parameters: Parameters;

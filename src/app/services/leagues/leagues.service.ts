@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
-
+import {Preferences} from "@capacitor/preferences";
+import {ReplaySubject} from "rxjs";
 /**
  * Model place
  *
@@ -56,11 +57,39 @@ export class LeaguesService {
    *
    * Zde je obyčejná implementace získání dat z proměnné
    */
-  get leaguesSample() {
+  private get leaguesSample() {
     return this.privateLeagues;
   }
+  /**
+   * Vlastní inicializace možného observable patternu
+   *
+   * Subject - je jich nekolik, implementaci volím, dle potřeby, viz oficiální dokumentace
+   * @private
+   */
+  private privateLeaguesSubject = new ReplaySubject<LeagueSample[]>(1)
 
+  /**
+   * Drží náš vlastní observable Pattern - proměnnou
+   */
+  get leaguesSample$() {
+    return this.privateLeaguesSubject.asObservable();
+  }
   constructor() {
+    // zísání dat z localstorage
+    // await zde nejde, constructor musí být vždy synchronní proto je zde then
+    Preferences.get({key: 'leagues'}).then(data => {
+      // pokud data nejsou (třeba aplikace bězí poprvé, musíme rozhodnout)
+      if (data.value) {
+        // data mám, přeložím zpět ze stringu do pole
+        const leagues = JSON.parse(data.value)
+        // nastavení nových dat pro všechny odběratele (observable pattern)
+        this.privateLeaguesSubject.next(leagues as LeagueSample[])
+      } else {
+        // data nejsou, vložím výchozí data
+        // nastavení nových dat pro všechny odběratele (observable pattern)
+        this.privateLeaguesSubject.next(this.leaguesSample)
+      }
+    });
   }
 
   /**
@@ -73,7 +102,13 @@ export class LeaguesService {
    * @param index
    * @param active
    */
-  setHome(index: number, active: boolean) {
+  async setHome(index: number, active: boolean) {
     this.privateLeagues[index].homepage = active;
+    this.privateLeaguesSubject.next(this.privateLeagues);
+    // uložení dat do localstorage (využívá vestavěný adapter pattern pro jednotlivé platformy)
+    await Preferences.set({
+      key: 'leagues',
+      value: JSON.stringify(this.privateLeagues),
+    });
   }
 }

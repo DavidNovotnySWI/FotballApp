@@ -7,7 +7,7 @@ import {Leagues} from "../../models/fotbal.model";
   providedIn: 'root'
 })
 export class FotballApiService {
-
+  detail?: Leagues;
   constructor(
     // Vložím servisku pro Dependency Injection (pro komunikaci s API skrze HTTP protokol)
     // private je doporučeno pro koncové třídy,
@@ -17,7 +17,7 @@ export class FotballApiService {
   }
 
   /**
-   * Get weather by GEO
+   * Get league by information
    * @param id number
    * @param country string
    * @param name string
