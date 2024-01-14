@@ -1,0 +1,44 @@
+
+<ion-header [translucent]="true">
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+        <ion-button class="custom-back-button" (click)="goBack()">Back</ion-button>
+      </ion-buttons>
+      <ion-title size=15px>Team Detail Page</ion-title>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ng-container>
+    <!-- Dynamické vycyklení pole obsahující asychroní requesty Observable objekt (pattern) -->
+    <!-- ng-container slouží pro možnost zrušení "zadivování", na DOM se nepropisuje -->
+    <ion-card  style="align-content: center;text-align: center" >
+      <ion-img  style="height: 100px" src="{{league.response[0].team.logo}}" alt="{{league.response[0].team.name}}"></ion-img>
+      <ion-card-header>
+        <ion-card-title>{{league.response[0].team.name}}</ion-card-title>
+        <ion-card-subtitle>{{league.response[0].team.country}}</ion-card-subtitle>
+        <ion-card-subtitle>{{league.response[0].team.founded}}</ion-card-subtitle>
+
+      </ion-card-header>
+      <ion-card-content>
+
+      </ion-card-content>
+
+    </ion-card>
+  </ng-container>
+  <ng-container >
+    <ion-card style="text-align: center">
+      <ion-img style="height: 200px" src="{{league.response[0].venue.image}}" alt="{{league.response[0].venue.name}}"></ion-img>
+      <ion-card-header>
+        <ion-card-title>{{league.response[0].venue.name}}</ion-card-title>
+        <ion-card-subtitle>{{league.response[0].venue.address}}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>Capacity:{{league.response[0].venue.capacity}}</ion-card-content>
+    </ion-card>
+  </ng-container>
+</ion-content>
+
+
+
+
