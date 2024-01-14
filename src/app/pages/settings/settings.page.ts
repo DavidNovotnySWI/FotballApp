@@ -20,7 +20,7 @@ export class SettingsPage implements OnInit {
   leagues: LeagueSample[]= [];
 
   /**
-   * Formulář pro dynamické řešení zatrhávání míst pro hlavní stránku
+   * Formulář pro dynamické řešení zatrhávání lig pro hlavní stránku
    */
   form: FormGroup;
 

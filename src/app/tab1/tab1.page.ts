@@ -1,12 +1,13 @@
 import {Component} from '@angular/core';
 import {FotballApiService} from "../services/fotbal-api/fotbal-api.service";
 import {firstValueFrom, Observable} from "rxjs";
-import {Leagues} from "../models/fotbal.model";
+import {League, Leagues} from "../models/fotbal.model";
 import {ModalController} from "@ionic/angular";
 import {SettingsPage} from "../pages/settings/settings.page";
 import {LeaguesService} from "../services/leagues/leagues.service";
+import {LeagueDetailPage} from "../pages/league-detail/league-detail.page";
 import {image} from "ionicons/icons";
-import { NavController } from '@ionic/angular';     // pro predani id do detailu
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tab1',
@@ -35,7 +36,7 @@ export class Tab1Page {
     private fotbalApiService: FotballApiService,
     private  modalCtrl: ModalController,
     private leaguesService: LeaguesService, // přidání servisky pro získání nastavení league
-    private navCtrl: NavController  // nav controller pro predani info na dalsi page
+  private router: Router // Přidejte Router
   ) {
 
     this.initLeagues();
@@ -129,9 +130,10 @@ export class Tab1Page {
    * Nastaví detail data skrze servisku dříve, než se otevře routerLink na view
    * @param league
    */
-  setDetailData(league: Leagues) {
-    this.fotbalApiService.detail = league;
+  goToLeagueDetail(league: Leagues): void {
+    this.fotbalApiService.detailLeague = league;
   }
+
 
   protected readonly innerHeight = innerHeight;
   protected readonly image = image;

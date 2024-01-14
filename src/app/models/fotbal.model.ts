@@ -2,37 +2,70 @@
 
 export interface Leagues {
   get: string;
-  parameters: Parameters;
-  errors: any[];
   results: number;
-  paging: Paging;
   response: Response[];
 }
 
-export interface Parameters {
-  id: string;
-  country: string;
-  name: string;
-}
 
-export interface Paging {
-  current: number;
-  total: number;
-}
 
 export interface Response {
   league: League;
   country: Country;
   seasons: Season[];
+  team: Team;
+  venue: Venue;
 }
-
+export interface Team {
+  id: number
+  name: string
+  code: string
+  country: string
+  founded: number
+  national: boolean
+  logo: string
+}
+export interface Venue {
+  id:       number
+  name:     string
+  address:  string
+  city:     string
+  capacity: number
+  surface:  string
+  image:    string
+}
 export interface League {
   id: number;
   name: string;
   type: string;
   logo: string;
+  standings: Array<Standings[]>;
+}
+export interface Standings {
+  rank: string;
+  team:        Team;
+  points  :   number;
+  goalsDiff: number;
+  group :      string;
+  form  :      string;
+  status   :   string;
+  description : string;
+  all    :     All;
+  home   :     All;
+  away    :    All;
 }
 
+export interface All {
+  played: number;
+  win  :  number;
+  draw :  number;
+  lose :  number;
+  goals:  Goals;
+
+}
+export interface Goals {
+  for:     number;
+  against : number;
+}
 export interface Country {
   name: string;
   code: string;

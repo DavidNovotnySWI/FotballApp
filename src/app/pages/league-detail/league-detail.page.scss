@@ -1,0 +1,31 @@
+/* league-detail.page.scss */
+
+.header-row {
+  background-color: snow;
+}
+
+.custom-back-button {
+  background-color: white;
+  width: 50px;
+}
+
+/* Ohraničení pro řádky a sloupce */
+.header-row,
+.data-row {
+  border-bottom: 1px solid #ccc;
+}
+
+/* Velikost obrázku týmu */
+.team-logo {
+  max-width: 100%;
+  height: 25px;
+  display: block;
+}
+
+
+/* Škálování pro responzivní zvětšování */
+@media only screen and (min-width: 601px) {
+  .table-container {
+    overflow-x: auto;
+  }
+}

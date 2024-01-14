@@ -1,15 +1,43 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title>league-detail</ion-title>
-  </ion-toolbar>
-</ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
+  <ion-header >
     <ion-toolbar>
-      <ion-title size="large">league-detail</ion-title>
+      <ion-buttons slot="start">
+        <ion-back-button></ion-back-button>
+        <ion-button class="custom-back-button" (click)="goBack()">Back</ion-button>
+      </ion-buttons>
+      <ion-title size=15px>{{league.response[0].league.name }}</ion-title>
     </ion-toolbar>
   </ion-header>
 
-  <div>{{league | json}}</div>
+  <ion-grid class="table-container">
+    <ion-row class="header-row" >
+      <ion-col  size="1"></ion-col>
+      <ion-col size="1"></ion-col>
+      <ion-col size="5">Team</ion-col>
+      <ion-col  style="text-align: right"size="1">M</ion-col>
+      <ion-col  style="text-align: right"size="1">W</ion-col>
+      <ion-col style="text-align: right" size="1">D</ion-col>
+      <ion-col style="text-align: right" size="1">L</ion-col>
+      <ion-col style="text-align: right" size="1">P</ion-col>
+    </ion-row>
+
+    <ng-container *ngFor="let standingsGroup of league.response[0]?.league?.standings">
+      <ng-container *ngIf="standingsGroup">
+      <ion-row class="data-row" *ngFor="let standing of standingsGroup" routerLink="/team/{{standing.team.id}}" (click)="goToTeamDetail(league,league.response[0].league.id,standing.team.id)" >
+        <ion-col size="1">{{ standing.rank }}</ion-col>
+        <ion-col size="1">
+          <img [src]="standing.team.logo" alt="{{ standing.team.name }} logo" class="team-logo"></ion-col>
+        <ion-col size="5">{{ standing.team.name }}</ion-col>
+        <ion-col size="1" style="text-align: right">{{ standing.all.played }}</ion-col>
+        <ion-col size="1" style="text-align: right">{{ standing.all.win }}</ion-col>
+        <ion-col size="1" style="text-align: right">{{ standing.all.draw }}</ion-col>
+        <ion-col size="1"  style="text-align: right">{{ standing.all.lose }}</ion-col>
+        <ion-col size="1"  style="text-align: right">{{ standing.points }}</ion-col>
+
+      </ion-row>
+      </ng-container>
+    </ng-container>
+  </ion-grid>
+
 </ion-content>

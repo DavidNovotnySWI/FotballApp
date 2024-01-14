@@ -12,13 +12,18 @@ const routes: Routes = [
   },
   // vložení endpointu /detail s lazy loadingem
   {
-    path: 'detail',
+    path: 'league/:id',
     loadChildren: () => import('./pages/league-detail/league-detail.module').then( m => m.LeagueDetailPageModule)
   },
   {
-    path: 'league-detail',
-    loadChildren: () => import('./pages/league-detail/league-detail.module').then( m => m.LeagueDetailPageModule)
+    path: 'team/:id',
+    loadChildren: () => import('./pages/team-detail/team-detail.module').then( m => m.TeamDetailPageModule)
+  },
+  {
+    path: 'players',
+    loadChildren: () => import('./pages/players/players.module').then( m => m.PlayersPageModule)
   }
+
 ];
 @NgModule({
   imports: [
