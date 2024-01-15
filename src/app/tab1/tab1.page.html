@@ -31,7 +31,7 @@
         <!-- Použití Ionic designu - ion-card dle oficiální dokumentace-->
         <!-- Angular routerLink otevře stránku detailu > /details - endpoint je zapsaný v app.router-module.ts -->
         <!-- Pomocí metody click (reaguje dříve jak routerLink) předám data do pomocné servisky -->
-        <ion-card  style="width:350px "  routerLink="/league/{{fotbal.response[0].league.id}}"  (click)="goToLeagueDetail(fotbal)">
+        <ion-card  style="width: fit-content(90%) "  routerLink="/league/{{fotbal.response[0].league.id}}"  (click)="goToLeagueDetail(fotbal)">
           <ion-img style="height: 75px" src="{{fotbal.response[0].league.logo}}" alt="{{fotbal.response[0].league.name}}"></ion-img>
           <ion-card-header>
             <ion-card-title>{{fotbal.response[0].league.name}}</ion-card-title>
@@ -45,4 +45,24 @@
       </ng-container>
     </ng-container>
   </div>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Přidat novou ligu</ion-card-title>
+    </ion-card-header>
+
+    <ion-card-content>
+      <ion-item>
+        <ion-label position="floating">Název ligy</ion-label>
+        <ion-input [(ngModel)]="newLeagueName" required></ion-input>
+      </ion-item>
+
+      <ion-item>
+        <ion-label position="floating">Země</ion-label>
+        <ion-input [(ngModel)]="newLeagueCountry" required></ion-input>
+      </ion-item>
+
+      <ion-button expand="full" (click)="addNewLeague()">Přidat ligu</ion-button>
+    </ion-card-content>
+  </ion-card>
 </ion-content>

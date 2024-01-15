@@ -46,7 +46,17 @@ export class LeaguesService {
     },
 
   ];
+  // Přidejte metodu pro přidání nové ligy
+    addLeague(newLeague: LeagueSample) {
+      this.privateLeagues.push(newLeague);
+     // this.privateLeaguesSubject.next(this.privateLeagues);
 
+      // Uložení nových dat do Local Storage
+      Preferences.set({
+        key: 'leagues',
+        value: JSON.stringify(this.privateLeagues),
+      });
+    }
   /**
    * Available places
    *

@@ -9,25 +9,35 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
-    <ng-container *ngIf="league$ | async as league; else loading">
-    <ng-container *ngFor="let player of league.response">
-        <ion-card  style="align-content: center;text-align: center" >
-            <ion-img  style="height: 100px" src="{{player.player.photo}}" alt="{{player.player.name}}"></ion-img>
-            <ion-card-header>
-                <ion-card-title>{{player.player.name}}</ion-card-title>
-                <ion-card-subtitle>{{player.player.age}}</ion-card-subtitle>
-                <ion-card-subtitle>{{player.player.nationality}}</ion-card-subtitle>
+    <ng-container *ngFor="let league$ of leagues$; let i = index">
+        <ng-container *ngIf="league$ | async as league; else loading">
+            <ng-container *ngFor="let player of league.response">
+                <ion-card *ngIf="player.statistics[0].games.minutes > 0 ">
+                    <ion-card-content>
+                        <ion-grid>
+                            <!-- Levý sloupec -->
+                            <ion-row>
+                                <ion-col size="6">
+                                    <img [src]="player.player.photo" alt="{{ player.player.name }} Image" class="player-image">
+                                    <ion-card-title>{{ player.player.name }}</ion-card-title>
+                                    <p>{{ player.player.age }}</p>
+                                </ion-col>
 
-            </ion-card-header>
-            <ion-card-content>
-
-            </ion-card-content>
-
-        </ion-card>
+                                <ion-col>
+                                    <ion-card-subtitle>Góly: {{ player.statistics[0].goals.total }}</ion-card-subtitle>
+                                    <ion-card-subtitle>Asistence: {{ player.statistics[0].goals.assists }}</ion-card-subtitle>
+                                    <ion-card-subtitle>Pozice: {{ player.statistics[0].games.position }}</ion-card-subtitle>
+                                    <ion-card-subtitle>Odehrané minuty: {{ player.statistics[0].games.minutes }}</ion-card-subtitle>
+                                </ion-col>
+                            </ion-row>
+                        </ion-grid>
+                    </ion-card-content>
+                </ion-card>
+            </ng-container>
+        </ng-container>
     </ng-container>
-    </ng-container>
-        <ng-template #loading>
-            <p>Loading...</p>
-        </ng-template>
 
+    <ng-template #loading>
+        <p>Loading...</p>
+    </ng-template>
 </ion-content>

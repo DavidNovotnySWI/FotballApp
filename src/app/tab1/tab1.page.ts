@@ -4,7 +4,7 @@ import {firstValueFrom, Observable} from "rxjs";
 import {League, Leagues} from "../models/fotbal.model";
 import {ModalController} from "@ionic/angular";
 import {SettingsPage} from "../pages/settings/settings.page";
-import {LeaguesService} from "../services/leagues/leagues.service";
+import {LeagueSample, LeaguesService} from "../services/leagues/leagues.service";
 import {LeagueDetailPage} from "../pages/league-detail/league-detail.page";
 import {image} from "ionicons/icons";
 import { Router } from '@angular/router';
@@ -29,6 +29,8 @@ export class Tab1Page {
   // datový typ se uvádí do <...> - generika
   fotbal$: Observable<Leagues>;
   fotbals$: Observable<Leagues>[] = [];
+  newLeagueName = '';
+  newLeagueCountry = '';
   constructor(
     // Vložím servisku pro Dependency Injection (má vlastní serviska)
     // private je doporučeno pro koncové třídy,
@@ -44,7 +46,7 @@ export class Tab1Page {
     // zde se žádná data nezískávají!!! data se získají až ve view pomocí | async (pipy async)
     // až pipa async provede onen .subscribe(...), který získá data
     // zde se pouze předavají stejné datové typy getByGeo$(...): Observable<...> >>> this.weather$: Observable<any>
-    this.fotbal$ = this.fotbalApiService.getLeague$(39,"England","Premier League")
+    this.fotbal$ = this.fotbalApiService.getLeague$("England","Premier League")
   }
 
   /**
@@ -71,7 +73,7 @@ export class Tab1Page {
         // na view pak používám | async stejně jako v případě získání jedné polohy
         // rozdíl je že to celé běží v cyklu, který je dynamický a reaguje na změny pole
         this.fotbals$.push(
-          this.fotbalApiService.getLeague$(league.id, league.country, league.name)
+          this.fotbalApiService.getLeague$(league.country, league.name)
         )
         // Lepší jednorádkový zápis
         // this.weathers$.push(this.weatherApiService.getByGeo$(place.latitude, place.longitude))
@@ -88,7 +90,7 @@ export class Tab1Page {
   fetchData() {
     // získám data za pomocí metody .subscribe(...)
     // používám servisku, které umožňuje přenášet logiku skrze Dependency Injection (DI)
-    this.fotbalApiService.getLeague$(39,"England","Premier League").subscribe(data => {
+    this.fotbalApiService.getLeague$("England","Premier League").subscribe(data => {
       // data získaná z requestu předám to proměnné this.data abych je mohl vypsat ve view (nahradím původní objekt uložený v data)
       this.data = data;
       console.log(data);
@@ -103,6 +105,11 @@ export class Tab1Page {
     // component = libovolný komponent/stránka (stránka je to samé, jen využívá lazy loading pomocí modulu)
     const modal = await this.modalCtrl.create({
       component: SettingsPage,
+      componentProps: {
+        updateLeaguesCallback: () => {
+          this.initLeagues();
+        }
+      }
     });
 
     // prezentace modalu po dalším nastaení (spustí animaci a dlaší části modalu)
@@ -133,6 +140,25 @@ export class Tab1Page {
   goToLeagueDetail(league: Leagues): void {
     this.fotbalApiService.detailLeague = league;
   }
+
+  addNewLeague() {
+    // Získání nových hodnot ze vstupního formuláře
+    const newLeague: LeagueSample = {
+      id: this.fotbals$.length + 1, // Vytvoření unikátního ID (můžete upravit podle potřeby)
+      name: this.newLeagueName,
+      country: this.newLeagueCountry,
+      homepage: true, // Defaultní hodnota pro domovskou stránku (můžete upravit podle potřeby)
+    };
+
+    // Přidání nové ligy do pole
+    this.leaguesService.addLeague(newLeague);
+
+
+    // Vymazání hodnot formuláře
+    this.newLeagueName = '';
+    this.newLeagueCountry = '';
+  }
+
 
 
   protected readonly innerHeight = innerHeight;

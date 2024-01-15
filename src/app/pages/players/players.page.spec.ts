@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { PlayersPage } from './players.page';
+import {async} from "rxjs";
 
 describe('PlayersPage', () => {
   let component: PlayersPage;

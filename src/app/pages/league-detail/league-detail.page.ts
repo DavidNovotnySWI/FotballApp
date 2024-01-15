@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import {FotballApiService} from "../../services/fotbal-api/fotbal-api.service";
 import {League, Leagues} from "../../models/fotbal.model";
 import {ActivatedRoute,Router} from "@angular/router";
-import {Observable} from "rxjs";
+import {Observable, of} from "rxjs";
 
 @Component({
   selector: 'app-league-detail',
@@ -27,9 +27,33 @@ export class LeagueDetailPage implements OnInit {
 
 
   ngOnInit() {
-    const leagueId = this.league.response[0].league.id
-    this.league$=this.fotbalApiService.getStandingInLeague$(leagueId,2023);
+    const leagueId = this.league.response[0].league.id;
 
+    // Zkontrolovat, zda existuji data v Local Storage a zda nejsou zastaralá
+    const storedData = localStorage.getItem(`leagueDetailData/${leagueId}`);
+    if (storedData) {
+      const storedLeague = JSON.parse(storedData) as Leagues;
+      const storedTimestamp = localStorage.getItem(`leagueDetailTimestamp/${leagueId}`);
+      const currentTimestamp = new Date().getTime();
+      const timeDifference = currentTimestamp - Number(storedTimestamp);
+
+      // Použiti dat z Local Storage, pokud nejsou starší než  1 hodina
+      if (timeDifference < 60 * 60 * 1000) {
+        this.league = storedLeague;
+        this.league$ = of(storedLeague);
+        return;
+      }
+    }
+
+    this.league$ = this.fotbalApiService.getStandingInLeague$(leagueId, 2023);
+
+    // aktualni data  do Local Storage
+    this.league$.subscribe(
+        (response) => {
+          localStorage.setItem(`leagueDetailData/${leagueId}`, JSON.stringify(response));
+          localStorage.setItem(`leagueDetailTimestamp/${leagueId}`, new Date().getTime().toString());
+        }
+    );
   }
 
   protected readonly innerWidth = innerWidth;

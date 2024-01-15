@@ -32,12 +32,12 @@ export class FotballApiService {
    * @param name string
 
    */
-  getLeague$(id: number, country: string, name:string) {
+  getLeague$(country: string, name:string) {
     let headers = new HttpHeaders();
     headers = headers.set('x-apisports-key', environment.apiToken);
     headers = headers.set('x-rapidapi-host', environment.baseUrl);
 
-    return this.http.get<Leagues>(`${environment.baseUrl}/leagues?id=${id}&country=${country}&name=${name}`, {headers: headers});
+    return this.http.get<Leagues>(`${environment.baseUrl}/leagues?&country=${country}&name=${name}`, {headers: headers});
   }
   /**
    * Get league teams by information
@@ -77,12 +77,12 @@ export class FotballApiService {
 
   }
 
-  getTeamPlayers$(teamid:number,leagueid: number,season: number) {
+  getTeamPlayers$(teamid:number,leagueid: number,season: number, page:number) {
     let headers = new HttpHeaders();
     headers = headers.set('x-apisports-key', environment.apiToken);
     headers = headers.set('x-rapidapi-host', environment.baseUrl);
 
-    return this.http.get<Leagues>(`${environment.baseUrl}/players?team=${teamid}&league=${leagueid}&season=${season}`, {headers: headers});
+    return this.http.get<Leagues>(`${environment.baseUrl}/players?team=${teamid}&league=${leagueid}&season=${season}&page=${page}`, {headers: headers});
 
   }
 

@@ -1,8 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import {Leagues} from "../../models/fotbal.model";
 import {FotballApiService} from "../../services/fotbal-api/fotbal-api.service";
+
 import { Router} from "@angular/router";
-import {Observable} from "rxjs";
+import {forkJoin, Observable, of} from 'rxjs';
 
 @Component({
   selector: 'app-players',
@@ -11,7 +12,8 @@ import {Observable} from "rxjs";
 })
 export class PlayersPage implements OnInit {
 
-    league$?: Observable<Leagues>;
+    leagues$: Observable<Leagues>[]=[];
+
     teamId:number;
     leagueId:number;
   constructor(private fotbalApiService: FotballApiService, private  router: Router)
@@ -21,7 +23,27 @@ export class PlayersPage implements OnInit {
   }
 
   ngOnInit() {
-      this.league$=this.fotbalApiService.getTeamPlayers$(this.teamId,this.leagueId, 2023);
+    const dataKey = `teams/players/${this.teamId}`;
+    const timestampKey = `timestamp/teams/players/${this.teamId}`;
+    const data = localStorage.getItem(dataKey);
+    const timestamp = localStorage.getItem(timestampKey);
+    const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
+    const now = new Date();
+
+    if (data && timestamp && (now.getTime() - Number(timestamp)) <= oneDay) {
+      this.leagues$ = JSON.parse(data).map((item: any) => of(item));
+    } else {
+      for (let page = 1; page <= 3; page++) {
+        this.leagues$.push(this.fotbalApiService.getTeamPlayers$(this.teamId, this.leagueId, 2023, page));
+      }
+      forkJoin(this.leagues$).subscribe(res => {
+        localStorage.setItem(dataKey, JSON.stringify(res));
+        localStorage.setItem(timestampKey, String(now.getTime()));
+      });
+    }
   }
+
+
+
 
 }

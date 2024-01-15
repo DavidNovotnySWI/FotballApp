@@ -3,11 +3,15 @@
 export interface Leagues {
   get: string;
   results: number;
+    paging:     Paging;
   response: Response[];
 }
 
 
-
+export interface Paging {
+    current: number;
+    total:   number;
+}
 export interface Response {
   league: League;
   country: Country;
@@ -19,7 +23,7 @@ export interface Response {
 }
 export interface Birth {
   date:    Date;
-  place:   null;
+  place:   string;
   country: string;
 }
 
@@ -40,72 +44,72 @@ export interface Statistic {
 }
 
 export interface Cards {
-  yellow:    null;
-  yellowred: null;
-  red:       null;
+  yellow:    number;
+  yellowred: number;
+  red:       number;
 }
 
 export interface Dribbles {
-  attempts: null;
-  success:  null;
-  past:     null;
+  attempts: number;
+  success:  number;
+  past:     number;
 }
 
 export interface Duels {
-  total: null;
-  won:   null;
+  total: number;
+  won:   number;
 }
 
 export interface Fouls {
-  drawn:     null;
-  committed: null;
+  drawn:     number;
+  committed: number;
 }
 
 export interface Games {
-  appearences: null;
-  lineups:     null;
-  minutes:     null;
-  number:      null;
+  appearences: number;
+  lineups:     number;
+  minutes:     number;
+  number:      number;
   position:    string;
-  rating:      null;
+  rating:      number;
   captain:     boolean;
 }
 
 export interface Goals {
-  total:    null;
-  conceded: null;
-  assists:  null;
-  saves:    null;
+  total:    number;
+  conceded: number;
+  assists:  number;
+  saves:    number;
 }
 export interface Passes {
-  total:    null;
-  key:      null;
-  accuracy: null;
+  total:    number;
+  key:      number;
+  accuracy: number;
 }
 
 export interface Penalty {
-  won:      null;
-  commited: null;
-  scored:   null;
-  missed:   null;
-  saved:    null;
+  won:      number;
+  commited: number;
+  scored:   number;
+  missed:   number;
+  saved:    number;
 }
 
 export interface Shots {
-  total: null;
-  on:    null;
+  total: number;
+  on:    number;
 }
 
 export interface Substitutes {
-  in:    null;
-  out:   null;
-  bench: null;
+  in:    number;
+  out:   number;
+  bench: number;
 }
 
 export interface Tackles {
-  total:         null;
-  blocks:        null;
-  interceptions: null;
+  total:         number;
+  blocks:        number;
+  interceptions: number;
 }
 export interface Player {
   id:          number;
@@ -115,8 +119,8 @@ export interface Player {
   age:         number;
   birth:       Birth;
   nationality: string;
-  height:      null;
-  weight:      null;
+  height:      string;
+  weight:      number;
   injured:     boolean;
   photo:       string;
 }
