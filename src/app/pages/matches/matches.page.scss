@@ -1,0 +1,51 @@
+.matches-container {
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+
+.match-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #ccc;
+  padding: 5px 0;
+}
+
+.team-info, .score-info {
+  display: flex;
+  align-items: center;
+}
+
+.team-info {
+  flex: 1; /* Tým na levé straně */
+  justify-content: flex-start;
+}
+
+.team-info:last-child {
+  justify-content: flex-end; /* Tým na pravé straně */
+}
+
+.score-info {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+.team-logo {
+  width: 30px;
+  height: 30px;
+  margin-right: 5px;
+}
+
+.team-name {
+  font-weight: bold;
+}
+
+.score {
+  font-size: 18px;
+  margin: 5px;
+}
+
+.separator {
+  margin: 0 5px;
+}

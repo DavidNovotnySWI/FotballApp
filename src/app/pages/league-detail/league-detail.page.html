@@ -1,14 +1,18 @@
-
-<ion-content [fullscreen]="true">
-  <ion-header >
+ <ion-header [translucent]="true" >
     <ion-toolbar>
       <ion-buttons slot="start">
         <ion-back-button></ion-back-button>
-        <ion-button class="custom-back-button" (click)="goBack()">Back</ion-button>
       </ion-buttons>
       <ion-title size=15px>{{league.response[0].league.name }}</ion-title>
     </ion-toolbar>
   </ion-header>
+
+ <ion-content [fullscreen]="true">
+   <ion-header collapse="condense">
+     <ion-toolbar>
+       <ion-title size=15px>{{league.response[0].league.name }}</ion-title>
+     </ion-toolbar>
+   </ion-header>
 
   <ion-grid class="table-container">
     <ion-row class="header-row" >
@@ -22,9 +26,9 @@
       <ion-col style="text-align: right" size="1">P</ion-col>
     </ion-row>
 
-    <ng-container *ngFor="let standingsGroup of league.response[0]?.league?.standings">
-      <ng-container *ngIf="standingsGroup">
-      <ion-row class="data-row" *ngFor="let standing of standingsGroup" routerLink="/team/{{standing.team.id}}" (click)="goToTeamDetail(league,league.response[0].league.id,standing.team.id)" >
+    <ng-container *ngIf="league$ | async as standings; else loading">
+    <ng-container *ngFor="let standingsGroup of standings.response[0]?.league?.standings">
+      <ion-row class="data-row" *ngFor="let standing of standingsGroup" routerLink="/team/{{standing.team.id}}" (click)="goToTeamDetail(league.response[0].league.id,standing.team.id)" >
         <ion-col size="1">{{ standing.rank }}</ion-col>
         <ion-col size="1">
           <img [src]="standing.team.logo" alt="{{ standing.team.name }} logo" class="team-logo"></ion-col>
@@ -38,6 +42,9 @@
       </ion-row>
       </ng-container>
     </ng-container>
+    <ng-template #loading>
+      <p>Loading...</p>
+    </ng-template>
   </ion-grid>
 
 </ion-content>

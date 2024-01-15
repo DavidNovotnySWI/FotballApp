@@ -3,32 +3,37 @@ import {FotballApiService} from "../../services/fotbal-api/fotbal-api.service";
 import {League, Leagues} from "../../models/fotbal.model";
 import {ActivatedRoute,Router} from "@angular/router";
 import {codeSharp} from "ionicons/icons";
+import {Observable} from "rxjs";
 @Component({
   selector: 'app-team-detail',
   templateUrl: './team-detail.page.html',
   styleUrls: ['./team-detail.page.scss'],
 })
 export class TeamDetailPage implements OnInit {
-  league: Leagues;
+  league$?: Observable<Leagues>;
   teamId:number;
   leagueId:number;
 
   constructor(private fotbalApiService: FotballApiService,private activatedRoute: ActivatedRoute, private  router: Router) {
-    this.league=this.fotbalApiService.detailTeam!;
     this.teamId=this.fotbalApiService.detailTeamId!;
     this.leagueId=this.fotbalApiService.detailTeamLeagueId!;
   }
 
   ngOnInit() {
-    this.fotbalApiService.getTeamInfo$(this.leagueId, 2023,this.teamId)
-      .subscribe((data: Leagues) => {
-        this.league = data;
-      })
+    this.league$=this.fotbalApiService.getTeamInfo$(this.leagueId, 2023,this.teamId);
+
   }
 
   goBack() {
     console.log(`League ID for Go Back: ${this.leagueId}`);
-    this.router.navigate([`/tabs/tab1`]);
+    this.router.navigate([`/leagues/:${this.leagueId}`]);
+
+  }
+
+  goToPlayers(leagueId: number, teamId: number ): void {
+    // Při kliknutí na kartu provede navigaci na stránku detailu ligy s předáním id ligy
+    this.fotbalApiService.detailTeamLeagueId =leagueId;
+    this.fotbalApiService.detailTeamId =teamId;
 
   }
 }

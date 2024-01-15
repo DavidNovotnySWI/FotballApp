@@ -3,13 +3,15 @@
     <ion-toolbar>
       <ion-buttons slot="start">
         <ion-back-button></ion-back-button>
-        <ion-button class="custom-back-button" (click)="goBack()">Back</ion-button>
       </ion-buttons>
       <ion-title size=15px>Team Detail Page</ion-title>
     </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ng-container *ngIf="league$ | async as league; else loading">
+  <ion-button  routerLink="./players" (click)="goToPlayers(league.response[0].league.id,league.response[0].team.id)"  style="text-align: center">Players</ion-button>
+  <ion-button  routerLink="./matches"  style="text-align: center">Matches</ion-button>
   <ng-container>
     <!-- Dynamické vycyklení pole obsahující asychroní requesty Observable objekt (pattern) -->
     <!-- ng-container slouží pro možnost zrušení "zadivování", na DOM se nepropisuje -->
@@ -37,6 +39,10 @@
       <ion-card-content>Capacity:{{league.response[0].venue.capacity}}</ion-card-content>
     </ion-card>
   </ng-container>
+    </ng-container>
+  <ng-template #loading>
+    <p>Loading...</p>
+  </ng-template>
 </ion-content>
 
 

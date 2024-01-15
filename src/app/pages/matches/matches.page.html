@@ -1,0 +1,40 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button></ion-back-button>
+    </ion-buttons>
+    <ion-title>matches</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <ion-header collapse="condense">
+    <ion-toolbar>
+      <ion-title size="large">matches</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+
+  <ng-container *ngIf="matches$ | async as matches; else loading">
+    <div class="matches-container">
+      <div class="match-row" *ngFor="let match of matches.response">
+        <div class="team-info">
+          <img [src]="match.teams.home.logo" alt="{{ match.teams.home.name }} logo" class="team-logo">
+          <span class="team-name">{{ match.teams.home.name }}</span>
+        </div>
+        <div class="score-info">
+          <span class="score">{{ match.goals.home }}</span>
+          <span class="separator">-</span>
+          <span class="score" >{{ match.goals.away }}</span>
+        </div>
+        <div class="team-info">
+          <span class="team-name">{{ match.teams.away.name }}</span>
+          <img [src]="match.teams.away.logo" alt="{{ match.teams.away.name }} logo" class="team-logo">
+        </div>
+      </div>
+    </div>
+  </ng-container>
+  <ng-template #loading>
+    <p>Loading...</p>
+  </ng-template>
+</ion-content>

@@ -3,6 +3,7 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 import {environment} from "../../../environments/environment";
 import {Leagues, League} from "../../models/fotbal.model";
 import {list} from "ionicons/icons";
+import {Matches} from "../../models/fixtures";
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ export class FotballApiService {
   detailTeam?:Leagues;
   detailTeamId?:number;
   detailTeamLeagueId?:number;
+  players?:Leagues;
 
 
   constructor(
@@ -43,7 +45,7 @@ export class FotballApiService {
    * @param season number
 
    */
-  getTeamsInLeague$(leagueid: number,season: number) {
+  getMatchesInLeague$(leagueid: number,season: number) {
     let headers = new HttpHeaders();
     headers = headers.set('x-apisports-key', environment.apiToken);
     headers = headers.set('x-rapidapi-host', environment.baseUrl);
@@ -74,5 +76,24 @@ export class FotballApiService {
     return this.http.get<Leagues>(`${environment.baseUrl}/teams?id=${teamid}&league=${leagueid}&season=${season}`, {headers: headers});
 
   }
+
+  getTeamPlayers$(teamid:number,leagueid: number,season: number) {
+    let headers = new HttpHeaders();
+    headers = headers.set('x-apisports-key', environment.apiToken);
+    headers = headers.set('x-rapidapi-host', environment.baseUrl);
+
+    return this.http.get<Leagues>(`${environment.baseUrl}/players?team=${teamid}&league=${leagueid}&season=${season}`, {headers: headers});
+
+  }
+
+  getTeamMatches$(leagueid: number,season: number, teamid:number) {
+    let headers = new HttpHeaders();
+    headers = headers.set('x-apisports-key', environment.apiToken);
+    headers = headers.set('x-rapidapi-host', environment.baseUrl);
+
+    return this.http.get<Matches>(`${environment.baseUrl}/fixtures?league=${leagueid}&season=${season}&team=${teamid}`, {headers: headers});
+
+  }
+
 
 }

@@ -30,15 +30,9 @@ export class SettingsPage implements OnInit {
     private fb: FormBuilder
   ) {
 
-    // this.leagues= this.leaguesService.leaguesSample
-
-
     // Dynamické vytvořneí formuláře (new FormGrou) pomocí servisky
     this.form = this.fb.group({
-      // Nahrazeno dynamickým generování níže...
-      // ch1: [this.places[0].homepage, []],
-      // Nahrazeno dynamickým generování níže...
-      // ch2: [this.places[1].homepage, []],
+
     })
     // dynamické naplnění formuláře
     // využívá vytvoření nových klíčů uvnitř objektu FormGroup a jim jako value nastaví FormControl
