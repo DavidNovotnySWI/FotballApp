@@ -3,6 +3,7 @@ import {FotballApiService} from "../../services/fotbal-api/fotbal-api.service";
 import {League, Leagues} from "../../models/fotbal.model";
 import {ActivatedRoute,Router} from "@angular/router";
 import {Observable, of} from "rxjs";
+import {Matches} from "../../models/fixtures";
 
 @Component({
   selector: 'app-league-detail',
@@ -13,6 +14,8 @@ export class LeagueDetailPage implements OnInit {
 
   league: Leagues;
   league$?:Observable<Leagues>;
+  leagueMatches$?:Observable<Matches>;
+  selectedView: 'standings' | 'league-matches' = 'standings';
 
 
   constructor( private fotbalApiService: FotballApiService,private activatedRoute: ActivatedRoute, private  router: Router,
@@ -72,6 +75,48 @@ export class LeagueDetailPage implements OnInit {
     // Při kliknutí na kartu provede navigaci na stránku detailu ligy s předáním id ligy
     this.fotbalApiService.detailTeamLeagueId =leagueId;
     this.fotbalApiService.detailTeamId =teamId;
+
+  }
+
+  loadLeagueMatches() {
+    // Zavolejte API pro načítání zápasů
+    const leagueId = this.league.response[0].league.id;
+    // Dnešní datum
+    const today = new Date();
+
+    // Převod na formát Y-m-d
+    const formatDate = (date: Date): string => {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    // dateFrom bude dnešní den ve formátu Y-m-d
+    const dateFrom: string = formatDate(today);
+
+    // dateTo bude dnešní den o 30 dnech později ve formátu Y-m-d
+    const dateTo: string = formatDate(new Date(today.setDate(today.getDate() + 7)));
+
+    const storedData = localStorage.getItem(`leagueMatches/${leagueId}`);
+    if (storedData) {
+      const storedLeague = JSON.parse(storedData) as Matches;
+      const storedTimestamp = localStorage.getItem(`leagueMatchesTimestamp/${leagueId}`);
+      const currentTimestamp = new Date().getTime();
+      const timeDifference = currentTimestamp - Number(storedTimestamp);
+
+      // Použiti dat z Local Storage, pokud nejsou starší než  1 hodina
+      if (timeDifference < 60 * 60 * 1000) {
+        this.leagueMatches$ = of(storedLeague);
+        return;
+      }
+    }
+    this.leagueMatches$=this.fotbalApiService.getLeagueMatches$(leagueId,2023,dateFrom,dateTo);
+    this.leagueMatches$.subscribe(
+      (response) => {
+        localStorage.setItem(`leagueMatches/${leagueId}`, JSON.stringify(response));
+        localStorage.setItem(`leagueMatchesTimestamp/${leagueId}`, new Date().getTime().toString());
+      });
 
   }
 }

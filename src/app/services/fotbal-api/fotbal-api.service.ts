@@ -96,4 +96,11 @@ export class FotballApiService {
   }
 
 
+  getLeagueMatches$(leagueId: number,season:number, dateFrom:string,dateTo:string) {
+    let headers = new HttpHeaders();
+    headers = headers.set('x-apisports-key', environment.apiToken);
+    headers = headers.set('x-rapidapi-host', environment.baseUrl);
+
+    return this.http.get<Matches>(`${environment.baseUrl}/fixtures?league=${leagueId}&season=${season}&from=${dateFrom}&to=${dateTo}`, {headers: headers});
+  }
 }

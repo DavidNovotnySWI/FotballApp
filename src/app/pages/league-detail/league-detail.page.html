@@ -9,7 +9,18 @@
 
  <ion-content [fullscreen]="true">
 
-  <ion-grid class="table-container">
+   <!-- Tlačítka pro přepínání mezi zobrazeními -->
+   <ion-segment [(ngModel)]="selectedView">
+     <ion-segment-button value="standings">
+       Standings
+     </ion-segment-button>
+     <ion-segment-button value="league-matches" (click)="loadLeagueMatches()">
+       League Matches
+     </ion-segment-button>
+   </ion-segment>
+
+
+  <ion-grid class="table-container" *ngIf="selectedView === 'standings'">
     <ion-row class="header-row" >
       <ion-col  size="1"></ion-col>
       <ion-col size="1"></ion-col>
@@ -41,5 +52,36 @@
       <p>Loading...</p>
     </ng-template>
   </ion-grid>
+
+   <!-- League Matches -->
+   <ng-container *ngIf="selectedView === 'league-matches'">
+     <ng-container *ngIf="leagueMatches$ | async as matches; else loading">
+       <div class="matches-container">
+         <div class="match-row" *ngFor="let match of matches.response">
+           <div class="team-info">
+             <img [src]="match.teams.home.logo" alt="{{ match.teams.home.name }} logo" class="team-logo">
+             <span class="team-name">{{ match.teams.home.name }}</span>
+           </div>
+           <div class="score-info">
+             <ng-container *ngIf="match.goals.home !== null && match.goals.away !== null; else noGoals">
+               <span class="score">{{ match.goals.home }}</span>
+               <span class="separator">-</span>
+               <span class="score">{{ match.goals.away }}</span>
+             </ng-container>
+             <ng-template #noGoals>
+               <span class="match-date">{{ match.fixture.date | date: 'MMM d, y' }}</span>
+             </ng-template>
+           </div>
+           <div class="team-info">
+             <span class="team-name">{{ match.teams.away.name }}</span>
+             <img [src]="match.teams.away.logo" alt="{{ match.teams.away.name }} logo" class="team-logo">
+           </div>
+         </div>
+       </div>
+     </ng-container>
+     <ng-template #loading>
+       <p>Loading...</p>
+     </ng-template>
+   </ng-container>
 
 </ion-content>
