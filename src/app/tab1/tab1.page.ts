@@ -73,7 +73,7 @@ export class Tab1Page {
         // na view pak používám | async stejně jako v případě získání jedné polohy
         // rozdíl je že to celé běží v cyklu, který je dynamický a reaguje na změny pole
         this.fotbals$.push(
-          this.fotbalApiService.getLeague$(league.country, league.name)
+          this.fotbalApiService.getLeague$(league.country,league.name)
         )
         // Lepší jednorádkový zápis
         // this.weathers$.push(this.weatherApiService.getByGeo$(place.latitude, place.longitude))
@@ -149,7 +149,7 @@ export class Tab1Page {
       country: this.newLeagueCountry,
       homepage: true, // Defaultní hodnota pro domovskou stránku (můžete upravit podle potřeby)
     };
-
+    if(newLeague.name != '' && newLeague.name != null)
     // Přidání nové ligy do pole
     this.leaguesService.addLeague(newLeague);
 
@@ -163,4 +163,5 @@ export class Tab1Page {
 
   protected readonly innerHeight = innerHeight;
   protected readonly image = image;
+  existingLeagues: string[] = ['Ligue 1', 'Serie A', 'Bundesliga'];
 }

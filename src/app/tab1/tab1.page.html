@@ -34,8 +34,8 @@
         <ion-card  style="width: fit-content(90%) "  routerLink="/league/{{fotbal.response[0].league.id}}"  (click)="goToLeagueDetail(fotbal)">
           <ion-img style="height: 75px" src="{{fotbal.response[0].league.logo}}" alt="{{fotbal.response[0].league.name}}"></ion-img>
           <ion-card-header>
-            <ion-card-title>{{fotbal.response[0].league.name}}</ion-card-title>
-            <ion-card-subtitle>{{fotbal.response[0].country.name}}</ion-card-subtitle>
+            <ion-card-title style="text-align: center">{{fotbal.response[0].league.name}}</ion-card-title>
+            <ion-card-subtitle style="text-align: center">{{fotbal.response[0].country.name}}</ion-card-subtitle>
           </ion-card-header>
           <ion-card-content>
 
@@ -53,8 +53,10 @@
 
     <ion-card-content>
       <ion-item>
-        <ion-label position="floating">Název ligy</ion-label>
-        <ion-input [(ngModel)]="newLeagueName" required></ion-input>
+        <ion-label position="floating">Vyberte existující ligu</ion-label>
+        <ion-select [(ngModel)]="newLeagueName" required>
+          <ion-select-option *ngFor="let league of existingLeagues" value="{{league}}">{{ league }}</ion-select-option>
+        </ion-select>
       </ion-item>
 
       <ion-item>
