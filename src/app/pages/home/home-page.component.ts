@@ -1,20 +1,20 @@
 import {Component} from '@angular/core';
-import {FotballApiService} from "../services/fotbal-api/fotbal-api.service";
+import {FotballApiService} from "../../services/fotbal-api/fotbal-api.service";
 import {firstValueFrom, Observable} from "rxjs";
-import {League, Leagues} from "../models/fotbal.model";
+import {League, Leagues} from "../../models/fotbal.model";
 import {ModalController} from "@ionic/angular";
-import {SettingsPage} from "../pages/settings/settings.page";
-import {LeagueSample, LeaguesService} from "../services/leagues/leagues.service";
-import {LeagueDetailPage} from "../pages/league-detail/league-detail.page";
+import {SettingsPage} from "../settings/settings.page";
+import {LeagueSample, LeaguesService} from "../../services/leagues/leagues.service";
+import {LeagueDetailPage} from "../league-detail/league-detail.page";
 import {image} from "ionicons/icons";
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-tab1',
-  templateUrl: 'tab1.page.html',
-  styleUrls: ['tab1.page.scss']
+  selector: 'app-home',
+  templateUrl: 'home-page.component.html',
+  styleUrls: ['home-page.component.scss']
 })
-export class Tab1Page {
+export class HomePage {
 
 // Klasický zápis
   // nutné přepsat data pokaždé když data získám
@@ -31,6 +31,8 @@ export class Tab1Page {
   fotbals$: Observable<Leagues>[] = [];
   newLeagueName = '';
   newLeagueCountry = '';
+    existingCountries: string[] = ['Germany', 'Italy', 'France'];
+    existingLeagues: string[] = ['Ligue 1', 'Serie A', 'Bundesliga'];
   constructor(
     // Vložím servisku pro Dependency Injection (má vlastní serviska)
     // private je doporučeno pro koncové třídy,
@@ -149,9 +151,14 @@ export class Tab1Page {
       country: this.newLeagueCountry,
       homepage: true, // Defaultní hodnota pro domovskou stránku (můžete upravit podle potřeby)
     };
-    if(newLeague.name != '' && newLeague.name != null)
+    if(newLeague.name != '' && newLeague.name != null){
+      if(newLeague.country != '' && this.existingCountries.includes(newLeague.country)){
+          this.leaguesService.addLeague(newLeague);
+      }
+
+    }
     // Přidání nové ligy do pole
-    this.leaguesService.addLeague(newLeague);
+
 
 
     // Vymazání hodnot formuláře
@@ -163,5 +170,4 @@ export class Tab1Page {
 
   protected readonly innerHeight = innerHeight;
   protected readonly image = image;
-  existingLeagues: string[] = ['Ligue 1', 'Serie A', 'Bundesliga'];
 }

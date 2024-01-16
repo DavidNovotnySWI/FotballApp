@@ -62,7 +62,7 @@ export class LeagueDetailPage implements OnInit {
   protected readonly innerWidth = innerWidth;
 
   goBack() {
-    this.router.navigate(['/tabs/tab1']); // nebo kam potřebujete zpět navigovat
+    this.router.navigate(['/tabs/home']); // nebo kam potřebujete zpět navigovat
   }
 
   /**
