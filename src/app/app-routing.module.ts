@@ -26,7 +26,7 @@ const routes: Routes = [
   {
     path: 'team/:id/matches',
     loadChildren: () => import('./pages/matches/matches.module').then( m => m.MatchesPageModule)
-  }
+  },
 
 ];
 @NgModule({

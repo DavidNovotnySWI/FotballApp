@@ -79,7 +79,7 @@ export class LeagueDetailPage implements OnInit {
   }
 
   loadLeagueMatches() {
-    // Zavolejte API pro načítání zápasů
+    // Volani API pro načítání zápasů
     const leagueId = this.league.response[0].league.id;
     // Dnešní datum
     const today = new Date();

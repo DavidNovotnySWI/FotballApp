@@ -52,19 +52,33 @@
     </ion-card-header>
 
     <ion-card-content>
-      <ion-item>
-        <ion-label position="floating">Vyberte existující ligu</ion-label>
-        <ion-select [(ngModel)]="newLeagueName" required>
-          <ion-select-option *ngFor="let league of existingLeagues" value="{{league}}">{{ league }}</ion-select-option>
-        </ion-select>
-      </ion-item>
+      <form [formGroup]="leagueForm">
+        <ion-item>
+          <ion-label position="floating">Vyberte existující ligu</ion-label>
+          <ion-select formControlName="newLeagueName">
+            <ion-select-option *ngFor="let league of existingLeagues" [value]="league">{{ league }}</ion-select-option>
+          </ion-select>
+          <ng-container  *ngIf="leagueForm?.get('newLeagueName')?.hasError('required') && leagueForm.get('newLeagueName')?.touched">
 
-      <ion-item>
-        <ion-label position="floating">Země</ion-label>
-        <ion-input [(ngModel)]="newLeagueCountry" required></ion-input>
-      </ion-item>
+            <ion-text style="color:red"><ion-icon name="information-circle-outline"></ion-icon>Název ligy je povinný.</ion-text>
+          </ng-container>
+        </ion-item>
 
-      <ion-button expand="full" (click)="addNewLeague()">Přidat ligu</ion-button>
+        <ion-item>
+          <ion-label position="floating">Země</ion-label>
+          <ion-input formControlName="newLeagueCountry"></ion-input>
+          <ng-container  *ngIf="leagueForm?.get('newLeagueCountry')?.hasError('required') && leagueForm.get('newLeagueCountry')?.touched">
+
+            <ion-text style="color:red"> <ion-icon name="information-circle-outline"></ion-icon>Země je povinná. </ion-text>
+          </ng-container>
+          <ng-container *ngIf="leagueForm?.get('newLeagueCountry')?.hasError('invalidCountry') && leagueForm.get('newLeagueCountry')?.touched">
+
+            <ion-text style="color:red"><ion-icon name="information-circle-outline"></ion-icon>Neplatná země.</ion-text>
+          </ng-container>
+        </ion-item>
+
+        <ion-button expand="full" (click)="addNewLeague()">Přidat ligu</ion-button>
+      </form>
     </ion-card-content>
   </ion-card>
 </ion-content>

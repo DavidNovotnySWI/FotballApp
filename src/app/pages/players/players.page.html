@@ -17,17 +17,42 @@
                         <ion-grid>
                             <!-- Levý sloupec -->
                             <ion-row>
-                                <ion-col size="6">
+                                <ion-col size="4">
                                     <img [src]="player.player.photo" alt="{{ player.player.name }} Image" class="player-image">
                                     <ion-card-title>{{ player.player.name }}</ion-card-title>
                                     <p>{{ player.player.age }}</p>
                                 </ion-col>
 
                                 <ion-col>
-                                    <ion-card-subtitle>Góly: {{ player.statistics[0].goals.total }}</ion-card-subtitle>
-                                    <ion-card-subtitle>Asistence: {{ player.statistics[0].goals.assists }}</ion-card-subtitle>
-                                    <ion-card-subtitle>Pozice: {{ player.statistics[0].games.position }}</ion-card-subtitle>
-                                    <ion-card-subtitle>Odehrané minuty: {{ player.statistics[0].games.minutes }}</ion-card-subtitle>
+                                  <ion-card>
+                                    <ion-card-title style="text-align: center;border-bottom: 1px solid black">Stats</ion-card-title>
+                                    <ion-row>
+                                      <ion-col size="6" style="margin-bottom: 15px">
+                                        <ion-card-subtitle style="font-weight: bold"> Goals:</ion-card-subtitle>
+                                        <ion-card-subtitle style="font-weight: bold"> Assists:</ion-card-subtitle>
+                                        <ion-card-subtitle style="font-weight: bold">Pozice:</ion-card-subtitle>
+                                        <ion-card-subtitle style="font-weight: bold">Odehrané minuty:</ion-card-subtitle>
+                                      </ion-col>
+                                      <ion-col>
+                                        <ion-card-subtitle> {{ player.statistics[0].goals.total }} </ion-card-subtitle>
+                                        <ion-card-subtitle>
+                                          <ng-container *ngIf=" player.statistics[0].goals.assists === null">
+                                            0
+                                          </ng-container>
+                                          {{ player.statistics[0].goals.assists }}
+                                          </ion-card-subtitle>
+                                        <ion-card-subtitle> {{ player.statistics[0].games.position }}</ion-card-subtitle>
+                                        <ion-card-subtitle> {{ player.statistics[0].games.minutes }}</ion-card-subtitle>
+                                      </ion-col>
+                                    </ion-row>
+
+
+
+
+
+                                  </ion-card>
+
+
                                 </ion-col>
                             </ion-row>
                         </ion-grid>

@@ -43,7 +43,7 @@ export class TeamDetailPage implements OnInit {
     this.router.navigate([`/leagues/:${this.leagueId}`]);
 
   }
-
+//predani id ligy a teamid do promennych v fotbalapi servisce
   goToPlayers(leagueId: number, teamId: number ): void {
     // Při kliknutí na kartu provede navigaci na stránku detailu ligy s předáním id ligy
     this.fotbalApiService.detailTeamLeagueId =leagueId;

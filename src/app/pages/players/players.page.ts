@@ -30,12 +30,16 @@ export class PlayersPage implements OnInit {
     const oneDay = 24 * 60 * 60 * 1000; // hours*minutes*seconds*milliseconds
     const now = new Date();
 
+    //jestli jsou data vic nez den stara prepisu localdata
     if (data && timestamp && (now.getTime() - Number(timestamp)) <= oneDay) {
       this.leagues$ = JSON.parse(data).map((item: any) => of(item));
     } else {
+      //volani takto protoze odpoved se vraci v pages
       for (let page = 1; page <= 3; page++) {
+        //promena pole observablu Leagues
         this.leagues$.push(this.fotbalApiService.getTeamPlayers$(this.teamId, this.leagueId, 2023, page));
       }
+      //forkjoin when you have a group of observables and only care about the final emitted value of each
       forkJoin(this.leagues$).subscribe(res => {
         localStorage.setItem(dataKey, JSON.stringify(res));
         localStorage.setItem(timestampKey, String(now.getTime()));

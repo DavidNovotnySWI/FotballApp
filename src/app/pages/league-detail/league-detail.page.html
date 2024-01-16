@@ -38,7 +38,7 @@
       <ion-row class="data-row" *ngFor="let standing of standingsGroup" routerLink="/team/{{standing.team.id}}" (click)="goToTeamDetail(league.response[0].league.id,standing.team.id)" >
         <ion-col size="1">{{ standing.rank }}</ion-col>
         <ion-col size="1">
-          <img [src]="standing.team.logo" alt="{{ standing.team.name }} logo" class="team-logo"></ion-col>
+          <img  [src]="standing.team.logo" alt="{{ standing.team.name }} logo" class="team-logo"></ion-col>
         <ion-col size="5">{{ standing.team.name }}</ion-col>
         <ion-col size="1" style="text-align: right">{{ standing.all.played }}</ion-col>
         <ion-col size="1" style="text-align: right">{{ standing.all.win }}</ion-col>

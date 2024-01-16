@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FotballApiService} from "../../services/fotbal-api/fotbal-api.service";
 import {firstValueFrom, Observable} from "rxjs";
 import {League, Leagues} from "../../models/fotbal.model";
@@ -8,14 +8,15 @@ import {LeagueSample, LeaguesService} from "../../services/leagues/leagues.servi
 import {LeagueDetailPage} from "../league-detail/league-detail.page";
 import {image} from "ionicons/icons";
 import { Router } from '@angular/router';
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-home',
   templateUrl: 'home-page.component.html',
   styleUrls: ['home-page.component.scss']
 })
-export class HomePage {
-
+export class HomePage implements OnInit{
+  leagueForm!: FormGroup;
 // Klasický zápis
   // nutné přepsat data pokaždé když data získám
   // je nutné kontrolovat existenci objektu a dalších zanořených objektů dodatečnýma podmínkama viz view
@@ -31,13 +32,16 @@ export class HomePage {
   fotbals$: Observable<Leagues>[] = [];
   newLeagueName = '';
   newLeagueCountry = '';
-    existingCountries: string[] = ['Germany', 'Italy', 'France'];
-    existingLeagues: string[] = ['Ligue 1', 'Serie A', 'Bundesliga'];
+
+  //pole s platnymi hodnotami pro validaci a pridavani novych lig
+    existingCountries: string[] = ['Germany', 'Italy', 'France','Spain'];
+    existingLeagues: string[] = ['Ligue 1', 'Serie A', 'Bundesliga','La Liga'];
   constructor(
     // Vložím servisku pro Dependency Injection (má vlastní serviska)
     // private je doporučeno pro koncové třídy,
     //  pokud by se jednalo o abstraktní třídu, nebo třídu určenou k dědění použil bych public nebo protected
     private fotbalApiService: FotballApiService,
+    private fb: FormBuilder,
     private  modalCtrl: ModalController,
     private leaguesService: LeaguesService, // přidání servisky pro získání nastavení league
   private router: Router // Přidejte Router
@@ -49,6 +53,14 @@ export class HomePage {
     // až pipa async provede onen .subscribe(...), který získá data
     // zde se pouze předavají stejné datové typy getByGeo$(...): Observable<...> >>> this.weather$: Observable<any>
     this.fotbal$ = this.fotbalApiService.getLeague$("England","Premier League")
+  }
+
+  ngOnInit() {
+    // Inicializace Angular Reactive formuláře s validacemi
+    this.leagueForm = this.fb.group({
+      newLeagueName: [null, Validators.required],
+      newLeagueCountry: [null, [Validators.required, this.validateCountry.bind(this)]],
+    });
   }
 
   /**
@@ -142,28 +154,36 @@ export class HomePage {
   goToLeagueDetail(league: Leagues): void {
     this.fotbalApiService.detailLeague = league;
   }
-
-  addNewLeague() {
-    // Získání nových hodnot ze vstupního formuláře
-    const newLeague: LeagueSample = {
-      id: this.fotbals$.length + 1, // Vytvoření unikátního ID (můžete upravit podle potřeby)
-      name: this.newLeagueName,
-      country: this.newLeagueCountry,
-      homepage: true, // Defaultní hodnota pro domovskou stránku (můžete upravit podle potřeby)
-    };
-    if(newLeague.name != '' && newLeague.name != null){
-      if(newLeague.country != '' && this.existingCountries.includes(newLeague.country)){
-          this.leaguesService.addLeague(newLeague);
-      }
-
+//validace country, jestli existuje v poli stringu zemi
+  validateCountry(control:any) {
+    if (this.existingCountries.includes(control.value)) {
+      return null; // Validní země
+    } else {
+      return { invalidCountry: true }; // Neplatná země
     }
-    // Přidání nové ligy do pole
+  }
 
+  //pridani nove ligy jestli probehne validace spravne
+  addNewLeague() {
+    // Kontrola platnosti formuláře
+    if (this.leagueForm.valid) {
+      // Získání hodnot ze vstupního formuláře
+      const newLeague = {
+        id: this.fotbals$.length + 1,
+        name: this.leagueForm.value.newLeagueName,
+        country: this.leagueForm.value.newLeagueCountry,
+        homepage: true,
+      };
 
+      // Přidání nové ligy do pole LeagueSamples
+      this.leaguesService.addLeague(newLeague);
 
-    // Vymazání hodnot formuláře
-    this.newLeagueName = '';
-    this.newLeagueCountry = '';
+      // Vymazání hodnot formuláře
+      this.leagueForm.reset();
+    } else {
+      // Zobrazení chyb ve formuláři
+      this.leagueForm.markAllAsTouched();
+    }
   }
 
 
