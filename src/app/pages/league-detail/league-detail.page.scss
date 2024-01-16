@@ -1,7 +1,6 @@
 /* league-detail.page.scss */
 
 .header-row {
-  background-color: snow;
 }
 
 .custom-back-button {
@@ -10,7 +9,10 @@
 }
 
 /* Ohraničení pro řádky a sloupce */
-.header-row,
+.header-row{
+  border-bottom: 1px solid #ccc;
+  border-top: 1px solid #ccc;
+}
 .data-row {
   border-bottom: 1px solid #ccc;
 }

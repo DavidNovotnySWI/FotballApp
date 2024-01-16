@@ -92,11 +92,11 @@ export class LeagueDetailPage implements OnInit {
       return `${year}-${month}-${day}`;
     };
 
-    // dateFrom bude dnešní den ve formátu Y-m-d
+    // dateFrom bude dnešní den
     const dateFrom: string = formatDate(today);
 
-    // dateTo bude dnešní den o 30 dnech později ve formátu Y-m-d
-    const dateTo: string = formatDate(new Date(today.setDate(today.getDate() + 7)));
+    // dateTo bude dnešní den o 14 dnech později ve formátu Y-m-d
+    const dateTo: string = formatDate(new Date(today.setDate(today.getDate() + 14)));
 
     const storedData = localStorage.getItem(`leagueMatches/${leagueId}`);
     if (storedData) {
